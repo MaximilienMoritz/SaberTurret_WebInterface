@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* HUD Military Color System */
+    --background: 0 0% 2%;
+    --foreground: 135 100% 50%;
+    
+    /* Main HUD Green */
+    --hud-primary: 135 100% 50%;
+    --hud-primary-glow: 135 100% 60%;
+    --hud-primary-dim: 135 80% 35%;
+    
+    /* Alert Colors */
+    --hud-alert: 0 100% 50%;
+    --hud-warning: 45 100% 50%;
+    --hud-safe: 135 100% 50%;
+    
+    /* UI Elements */
+    --card: 0 0% 5%;
+    --card-foreground: 135 100% 50%;
+    
+    --popover: 0 0% 5%;
+    --popover-foreground: 135 100% 50%;
+    
+    --primary: 135 100% 50%;
+    --primary-foreground: 0 0% 2%;
+    
+    --secondary: 135 60% 20%;
+    --secondary-foreground: 135 100% 50%;
+    
+    --muted: 135 20% 15%;
+    --muted-foreground: 135 60% 40%;
+    
+    --accent: 135 80% 45%;
+    --accent-foreground: 0 0% 2%;
+    
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 135 50% 20%;
+    --input: 135 50% 20%;
+    --ring: 135 100% 50%;
+    
+    --radius: 0;
+    
+    /* HUD Specific */
+    --hud-grid: 135 40% 25%;
+    --hud-text: 135 100% 55%;
+    --hud-shadow: 135 100% 50%;
+    
+    /* Sidebar - not used but keeping for compatibility */
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 135 100% 50%;
+    --sidebar-primary: 135 100% 50%;
+    --sidebar-primary-foreground: 0 0% 2%;
+    --sidebar-accent: 135 60% 20%;
+    --sidebar-accent-foreground: 135 100% 50%;
+    --sidebar-border: 135 50% 20%;
+    --sidebar-ring: 135 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono overflow-hidden;
+  }
+}
+
+@layer components {
+  /* HUD Glow Effect */
+  .hud-glow {
+    filter: drop-shadow(0 0 2px hsl(var(--hud-primary-glow))) 
+            drop-shadow(0 0 5px hsl(var(--hud-primary)));
+  }
+  
+  .hud-text {
+    @apply text-primary font-mono tracking-wider;
+    text-shadow: 0 0 10px hsl(var(--hud-shadow) / 0.8),
+                 0 0 20px hsl(var(--hud-shadow) / 0.5);
+  }
+  
+  /* Scanline Effect */
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+  
+  .scanline {
+    animation: scanline 8s linear infinite;
+  }
+  
+  /* Pulse Animation */
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  /* Rotate Animation */
+  @keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  .rotate-slow {
+    animation: rotate-slow 60s linear infinite;
+  }
+  
+  /* Flicker Effect */
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.8; }
+    94% { opacity: 1; }
+    95% { opacity: 0.9; }
+    96% { opacity: 1; }
+  }
+  
+  .flicker {
+    animation: flicker 3s ease-in-out infinite;
+  }
+  
+  /* Grid Pattern */
+  .hud-grid {
+    background-image: 
+      linear-gradient(hsl(var(--hud-grid) / 0.2) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--hud-grid) / 0.2) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+}
