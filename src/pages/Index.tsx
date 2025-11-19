@@ -10,6 +10,7 @@ import { useJoystickLogout } from '@/hooks/JoystickInitialisation';
 import { GamepadDebug } from "@/hooks/JoystickDebug";
 import { useJoystickZoom } from "@/hooks/useJoystickZoom";
 import {useJoystickFocus} from "@/hooks/useJoystickFocus.tsx";
+import {useJoystickMove} from "@/hooks/useJoystickMove.tsx";
 
 
 const Index = () => {
@@ -31,6 +32,9 @@ const Index = () => {
   const { isConnected, controllerName } = useJoystickLogout();
 
   useJoystickFocus();
+
+
+  useJoystickMove();
 
   useEffect(() => {
     const interval = setInterval(() => {
