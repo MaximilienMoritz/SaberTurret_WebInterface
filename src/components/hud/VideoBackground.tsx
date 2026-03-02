@@ -14,7 +14,7 @@ const VideoBackground: React.FC = () => {
     return (
         <img
             key={reloadKey}
-            src={`http://172.16.201.61:5000/stream`} // évite le cache navigateur
+            src={`http://172.16.151.33:5000/stream`} // évite le cache navigateur
             alt="Camera Live stream"
             style={{
                 position: "fixed",
