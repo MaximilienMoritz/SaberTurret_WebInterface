@@ -2,7 +2,7 @@ import dgram from "dgram";
 import { WebSocketServer } from "ws";
 
 const UDP_PORT = 5005;
-const RASPBERRY_IP = "172.16.201.61";
+const RASPBERRY_IP = "172.16.151.33";
 const client = dgram.createSocket("udp4");
 
 const wss = new WebSocketServer({ port: 8081 });
