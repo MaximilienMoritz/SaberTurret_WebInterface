@@ -20,7 +20,7 @@ export const TurretStats: React.FC<TurretStatsProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('http://172.16.201.61:5000/status');
+        const res = await fetch('http://172.16.151.33:5000/status');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
