@@ -77,6 +77,12 @@ All colors MUST be HSL.
   }
 }
 
+html, body {
+  pointer-events: none;
+  cursor: none;
+  overflow: hidden; /* bloque le scroll */
+}
+
 @layer components {
   /* HUD Glow Effect */
   .hud-glow {

@@ -1,12 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 
 import SendCommand from "./utils.tsx";
-
-
-
 import * as dgram from "node:dgram";
 
-export const useJoystickFocus = () => {
+export const useJoystickAutoFocus = () => {
 
   const API_URL = "http://172.16.201.61:5000/optic";
   const lastSend = useRef(0);
@@ -35,7 +32,7 @@ export const useJoystickFocus = () => {
 
         // === Focus ===
         if (gp.buttons[4]?.pressed) {
-            console.log("AAAAAA")
+            console.log("Focus")
               sendFocus()
         }
 

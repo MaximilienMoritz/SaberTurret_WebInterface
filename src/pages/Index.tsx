@@ -9,8 +9,8 @@ import VideoBackground from '@/components/hud/VideoBackground';
 import { useJoystickLogout } from '@/hooks/JoystickInitialisation';
 import { GamepadDebug } from "@/hooks/JoystickDebug";
 import { useJoystickZoom } from "@/hooks/useJoystickZoom";
-import {useJoystickFocus} from "@/hooks/useJoystickFocus.tsx";
-
+import { useJoystickAutoFocus } from "@/hooks/useJoystickAutoFocus.tsx";
+import { useJoystickMovement } from '@/hooks/useJoystickMovement';
 
 const Index = () => {
   // const [zoom, setZoom] = useState(5);
@@ -26,11 +26,14 @@ const Index = () => {
   // Hook personnalisé pour gérer le zoom via joystick
   const { zoom, focus, aperture } = useJoystickZoom();
 
-
   // Active la détection joystick
   const { isConnected, controllerName } = useJoystickLogout();
 
-  useJoystickFocus();
+  // Hook personnalisé pour gérer l'auto-focus via joystick
+  useJoystickAutoFocus();
+
+  // Hook personnalisé pour gérer les mouvements via joystick
+  useJoystickMovement();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -83,7 +86,7 @@ const Index = () => {
           <div className="absolute right-8 bottom-8">
             <TurretStats
                 maxRAM={100}     // correspond à 100%
-                maxHeat={100}    // température max affichée
+                maxHeat={100}    // température max affichée (Celsius)
                 maxCPU={100}     // CPU max en %
                 status={turretStatus}
             />
