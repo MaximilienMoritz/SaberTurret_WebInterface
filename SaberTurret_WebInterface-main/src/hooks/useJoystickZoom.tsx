@@ -1,109 +1,58 @@
-import { useEffect, useState, useRef } from "react";
-
+import { useEffect, useRef } from "react";
 import SendCommand from "./utils.tsx";
 
-
-
-import * as dgram from "node:dgram";
-
+/**
+ * Gère le zoom via les axes du joystick secondaire (axes[2] ou axes[3]).
+ * Utilise SendCommand("zoom", { value }).
+ */
 export const useJoystickZoom = () => {
-  const [zoom, setZoom] = useState(1);
-  const [focus, setFocus] = useState(5);
-  const [aperture, setAperture] = useState(8);
+  const SEND_INTERVAL = 50; // ~20 FPS
+  const MAX_ANGLE_ZOOM = 853;
+  const STEP = 15; // incrément par frame, ajustable
 
-  const API_URL = "http://172.16.201.61:5000/optic";
-  const lastSend = useRef(0);
-  const SEND_DELAY = 1000; // délai anti-spam (ms)
+  const currentAngle = useRef<number>(Math.floor(MAX_ANGLE_ZOOM / 2));
+  const lastTime = useRef<number>(0);
 
   useEffect(() => {
-    const sendOptic = async (zoomValue: number, focusValue: number, apertureValue: number) => {
-      const now = Date.now();
-      if (now - lastSend.current < SEND_DELAY) return;
-      lastSend.current = now;
-
-      try {
-        const payload = {
-          zoom: zoomValue,
-          focus: focusValue,
-          aperture: apertureValue,
-        };
-
-        await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        console.log("Optic envoyé :", payload);
-      } catch (err) {
-        console.warn("Erreur d’envoi du JSON optic :", err);
-      }
-    };
-
-
-      const ws = new WebSocket("ws://localhost:8081");
-
-      function sendOptic2(zoom, focus, aperture) {
-          SendCommand("optic", { zoom, focus, aperture });
-          console.log("sent")
-      }
-
     const checkGamepad = () => {
       const gamepads = navigator.getGamepads();
-      if (!gamepads) return;
+      if (!gamepads) {
+        requestAnimationFrame(checkGamepad);
+        return;
+      }
 
       for (const gp of gamepads) {
         if (!gp) continue;
 
-        // === Zoom ===
-        if (gp.buttons[10]?.pressed) {
-          setZoom((prev) => {
-            const newZoom = Math.min(prev + 1, 180);
-            sendOptic2(newZoom, focus, aperture);
-            return newZoom;
-          });
+        const zoomIn  = gp.buttons[10]?.pressed; // zoom +
+        const zoomOut = gp.buttons[12]?.pressed; // zoom -
+
+        if (!zoomIn && !zoomOut) {
+          requestAnimationFrame(checkGamepad);
+          return;
         }
 
-        if (gp.buttons[12]?.pressed) {
-          setZoom((prev) => {
-            const newZoom = Math.max(prev - 1, 0);
-            sendOptic2(newZoom, focus, aperture);
-            return newZoom;
-          });
-        }
+        const now = Date.now();
+        const timeOk = now - lastTime.current > SEND_INTERVAL;
 
-        // === Focus ===
-        if (gp.buttons[11]?.pressed) {
-          setFocus((prev) => {
-            const newFocus = Math.min(prev + 1, 180);
-            sendOptic2(zoom, newFocus, aperture);
-            return newFocus;
-          });
-        }
+        if (timeOk) {
+          const newAngle = Math.round(
+            Math.min(
+              MAX_ANGLE_ZOOM,
+              Math.max(0, currentAngle.current + (zoomIn ? STEP : -STEP))
+            )
+          );
 
-        if (gp.buttons[13]?.pressed) {
-          setFocus((prev) => {
-            const newFocus = Math.max(prev - 1, 0);
-            sendOptic2(zoom, newFocus, aperture);
-            return newFocus;
-          });
-        }
+          if (newAngle !== currentAngle.current) {
+            currentAngle.current = newAngle;
+            lastTime.current = now;
 
-        // === Aperture ===
-        if (gp.buttons[22]?.pressed) {
-          setAperture((prev) => {
-            const newAperture = Math.min(prev + 1, 180);
-            sendOptic2(zoom, focus, newAperture);
-            return newAperture;
-          });
-        }
-
-        if (gp.buttons[23]?.pressed) {
-          setAperture((prev) => {
-            const newAperture = Math.min(prev - 1, 0);
-            sendOptic2(zoom, focus, newAperture);
-            return newAperture;
-          });
+            SendCommand("zoom", { value: newAngle });
+            console.log(
+              `%cZoom → ${zoomIn ? "IN ▲" : "OUT ▼"} | Angle: ${newAngle}`,
+              "color: orange; font-weight: bold;"
+            );
+          }
         }
       }
 
@@ -112,6 +61,4 @@ export const useJoystickZoom = () => {
 
     requestAnimationFrame(checkGamepad);
   }, []);
-
-  return { zoom, focus, aperture };
 };

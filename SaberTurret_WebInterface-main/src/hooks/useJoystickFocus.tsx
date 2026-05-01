@@ -8,7 +8,7 @@ import * as dgram from "node:dgram";
 
 export const useJoystickFocus = () => {
 
-  const API_URL = "http://172.16.201.61:5000/optic";
+  const API_URL = "http://172.16.151.143:5002/optic";
   const lastSend = useRef(0);
   const SEND_DELAY = 1000; // délai anti-spam (ms)
 
@@ -25,6 +25,15 @@ export const useJoystickFocus = () => {
           SendCommand("focus", { "do": 1 });
           console.log("sent")
       }
+
+    // ─── Clavier ───────────────────────────────────────────────────────────
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "f") {
+        sendFocus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
 
     const checkGamepad = () => {
       const gamepads = navigator.getGamepads();

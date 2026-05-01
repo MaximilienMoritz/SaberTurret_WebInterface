@@ -15,6 +15,15 @@ export const useJoystickEnableStop = () => {
       console.log("enabel_stop");
     }
 
+        // ─── Clavier ───────────────────────────────────────────────────────────
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "Delete") {
+        sendEnableStop();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
     const checkGamepad = () => {
       const gamepads = navigator.getGamepads();
       if (!gamepads) return;

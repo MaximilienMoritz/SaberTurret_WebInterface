@@ -13,6 +13,8 @@ import {useJoystickFocus} from "@/hooks/useJoystickFocus.tsx";
 import {useJoystickMove} from "@/hooks/useJoystickMove.tsx";
 import { useJoystickEnableMoteur } from '@/hooks/useJoystickEnableMoteur';
 import { useJoystickEnableStop } from '@/hooks/useJoystickStop';
+import { useJoystickHoming } from '@/hooks/useJoystickHoming';
+import { useJoystickAutofocus } from '@/hooks/useJoystickAutoFocus';
 
 
 const Index = () => {
@@ -27,8 +29,7 @@ const Index = () => {
   const [power, setPower] = useState(85);
 
   // Hook personnalisé pour gérer le zoom via joystick
-  const { zoom, focus, aperture } = useJoystickZoom();
-
+  // const { zoom, focus, aperture } = useJoystickZoom();
 
   // Active la détection joystick
   const { isConnected, controllerName } = useJoystickLogout();
@@ -37,6 +38,9 @@ const Index = () => {
   useJoystickMove();
   useJoystickEnableMoteur();
   useJoystickEnableStop();
+  useJoystickHoming();
+  useJoystickZoom();
+  useJoystickAutofocus();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -117,11 +121,6 @@ const Index = () => {
                 <span className="ml-2">35,000 FT</span>
               </div>
             </div>
-          </div>
-
-            {/* Zoom Indicator (temporaire) */}
-          <div className="absolute top-4 right-4 text-xs font-mono text-green-400">
-            ZOOM: x{zoom.toFixed(1)}
           </div>
 
           {/* Bottom Bar */}

@@ -11,9 +11,15 @@ export const useJoystickEnableMoteur = () => {
       if (now - lastSend.current < SEND_DELAY) return;
       lastSend.current = now;
 
-      SendCommand("testenabel", {});
+      SendCommand("enable_moteur", {});
       console.log("sending enable moteur");
     }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "m") {
+        sendEnableMoteur();
+      }
+    };
 
     const checkGamepad = () => {
       const gamepads = navigator.getGamepads();
